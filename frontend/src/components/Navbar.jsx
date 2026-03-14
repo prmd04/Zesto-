@@ -16,6 +16,7 @@ import axios from "axios";
 import { logoutUser, setSearchItems, setSearchText} from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import useGetCity from "../hooks/useGetCity";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 
 const Navbar = () => {
@@ -39,7 +40,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:8000/api/auth/signout", {
+      await axios.get(`${serverURL}/api/auth/signout`, {
         withCredentials: true,
       });
       dispatch(logoutUser());
@@ -51,7 +52,7 @@ const Navbar = () => {
   const handleSearchItems = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/item/searchitems?query=${query}&city=${city}`,
+        `${serverURL}/api/item/searchitems?query=${query}&city=${city}`,
         { withCredentials: true },
       );
       dispatch(setSearchItems(res.data));

@@ -26,6 +26,7 @@ import axios, { Axios } from "axios";
 import Loader from "../components/Loader";
 import { addNewOrder } from "../redux/userSlice";
 import { incrementPendingOrders} from "../redux/ownerSlice";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 /* Leaflet marker fix */
 let DefaultIcon = L.icon({
@@ -119,7 +120,7 @@ function CheckOut() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/order/placeorder",
+        `${serverURL}/api/order/placeorder`,
         {
           paymentMethod,
           deliveryAddress: {
@@ -163,7 +164,7 @@ function CheckOut() {
       handler: async (razorResponse) => {
         try {
           const response= await axios.post(
-            `http://localhost:8000/api/order/verifypayement`,
+            `${serverURL}/api/order/verifypayement`,
             {
               razorpay_payment_id: razorResponse.razorpay_payment_id,
               orderId,

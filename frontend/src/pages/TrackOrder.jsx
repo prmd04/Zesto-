@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import DeliveryBoyTracking from "../components/DeliveryBoyTracking";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const TrackOrder = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const TrackOrder = () => {
   const handleGetOrder = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/order/getorderbyid/${orderId}`,
+        `${serverURL}/api/order/getorderbyid/${orderId}`,
         { withCredentials: true },
       );
       setOrder(res.data);

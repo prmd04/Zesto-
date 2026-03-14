@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setMyShopData } from '../redux/ownerSlice';
 import { useState } from 'react';
 import Loader from './Loader';
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const FoodItemCart = ({ item }) => {
   
@@ -18,7 +19,7 @@ const FoodItemCart = ({ item }) => {
   const handleDelete = async ()=>{
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8000/api/item/deleteitem/${item._id}`,{withCredentials:true});
+      const res = await axios.get(`${serverURL}/api/item/deleteitem/${item._id}`,{withCredentials:true});
 
       setLoading(false);
       navigate("/");

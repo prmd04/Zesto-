@@ -2,6 +2,7 @@ import React,{useEffect} from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { clearShopData, setMyShopData } from '../redux/ownerSlice.js';
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 
 const useGetCurrentShop = () => {
@@ -10,7 +11,7 @@ const useGetCurrentShop = () => {
   useEffect(() => {
     const fetchUser = async()=>{
       try {
-        const response = await axios.get('http://localhost:8000/api/shop/current' , {withCredentials:true})
+        const response = await axios.get(`${serverURL}/api/shop/current` , {withCredentials:true})
         dispatch(setMyShopData(response.data));
       } catch (error) {
         dispatch(clearShopData());

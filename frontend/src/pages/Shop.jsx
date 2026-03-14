@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
 import { Store, MapPin, UtensilsCrossed, Loader2, ArrowLeft } from 'lucide-react'; // Added ArrowLeft
 import FoodCard from "../components/FoodCard";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const Shop = () => {
   const { shopId } = useParams();
@@ -16,7 +17,7 @@ const Shop = () => {
   const handleShop = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8000/api/item/getitembyshop/${cleanShopId}`, { withCredentials: true });
+      const res = await axios.get(`${serverURL}/api/item/getitembyshop/${cleanShopId}`, { withCredentials: true });
       setShop(res.data.shop);
       setItems(res.data.items);
     } catch (error) {

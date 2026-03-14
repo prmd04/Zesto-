@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MapPin, Clock, ChevronRight } from "lucide-react";
 import axios from "axios";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const OwnerOrderCard = ({ order }) => {
   const { user, deliveryAddress, paymentMethod, createdAt, shopOrders } = order;
@@ -34,7 +35,7 @@ const OwnerOrderCard = ({ order }) => {
     setLocalStatus(newStatus);
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/order/updatestatus/${orderId}/${shopId}`,
+        `${serverURL}/api/order/updatestatus/${orderId}/${shopId}`,
         { status: newStatus },
         { withCredentials: true },
       );

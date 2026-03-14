@@ -25,7 +25,7 @@ import TrackOrder from "./pages/TrackOrder.jsx";
 import Shop from "./pages/Shop.jsx";
 
 function App() {
-  const serverURL = "http://localhost:8000";
+  
   const socketRef = useRef(null);
   const dispatch = useDispatch();
   useGetCurrentUser();

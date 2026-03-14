@@ -5,6 +5,7 @@ import { GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 import {
   Mail,
   UtensilsCrossed,
@@ -46,7 +47,7 @@ const SignIn = () => {
       const payload = { email: user.email };
 
       const response = await axios.post(
-        "http://localhost:8000/api/auth/singinwithgoogle",
+        `${serverURL}/api/auth/singinwithgoogle`,
         payload,
         { withCredentials: true },
       );
@@ -74,7 +75,7 @@ const SignIn = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/signin",
+        `${serverURL}/api/auth/signin`,
         formData,
         { withCredentials: true }
       );

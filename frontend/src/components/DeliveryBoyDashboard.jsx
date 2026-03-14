@@ -16,12 +16,13 @@ const DeliveryBoyDashboard = () => {
   const [acceptingId, setAcceptingId] = useState(null);
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState("");
-  const socketRef = useRef(null);
+  const serverURL = import.meta.env.VITE_SERVER_URL;
+
 
   const getCurrentOrder = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/order/currentorder",
+        `${serverURL}/api/order/currentorder`,
         { withCredentials: true }
       );
       setCurrentOrder(res.data || null);
@@ -33,7 +34,7 @@ const DeliveryBoyDashboard = () => {
  const fetchAssignments = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:8000/api/order/getassignment",
+      `${serverURL}/api/order/getassignment`,
       { withCredentials: true }
     );
     setAssignments(res.data || []);
@@ -49,7 +50,7 @@ const DeliveryBoyDashboard = () => {
       setLoading(true);
       setAcceptingId(assignmentId);
       await axios.get(
-        `http://localhost:8000/api/order/acceptorder/${assignmentId}`,
+        `${serverURL}/api/order/acceptorder/${assignmentId}`,
         { withCredentials: true }
       );
       setAssignments([]);
@@ -69,7 +70,7 @@ const DeliveryBoyDashboard = () => {
       setLoading(true);
 
       await axios.post(
-        "http://localhost:8000/api/order/deliveryotp",
+        `${serverURL}/api/order/deliveryotp`,
         {
           orderId: currentOrder._id,
           shopOrderId: currentOrder.shopOrder._id,
@@ -91,7 +92,7 @@ const DeliveryBoyDashboard = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/order/verifydeliveryotp`,
+        `${serverURL}/api/order/verifydeliveryotp`,
         {
           orderId: currentOrder._id,
           shopOrderId: currentOrder.shopOrder._id,

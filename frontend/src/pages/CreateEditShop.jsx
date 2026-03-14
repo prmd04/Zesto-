@@ -5,6 +5,7 @@ import { ArrowLeft, Utensils } from "lucide-react";
 import useGetCity from "../hooks/useGetCity";
 import axios from "axios";
 import { setMyShopData } from "../redux/ownerSlice";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 
 const CreateEditShop = () => {
@@ -49,7 +50,7 @@ const CreateEditShop = () => {
       data.append("image", formData.image);
     }
     try {
-        const result = await axios.post("http://localhost:8000/api/shop/create-edit",data,{withCredentials:true});
+        const result = await axios.post(`${serverURL}/api/shop/create-edit`,data,{withCredentials:true});
 
         dispatch(setMyShopData(result.data));
         navigate("/")

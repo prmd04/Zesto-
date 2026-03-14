@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const useUpdateLocation = () => {
     const {userData}= useSelector(state=>state.user);
@@ -8,7 +9,7 @@ const useUpdateLocation = () => {
     const updateLocation = async (lat, lon) => {
       try {
         const result = await axios.post(
-          `http://localhost:8000/api/user/updateuserlocation`,
+          `${serverURL}/api/user/updateuserlocation`,
           { lat, lon },
           { withCredentials: true },
         );

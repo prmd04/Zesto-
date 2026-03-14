@@ -19,6 +19,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { setUserData } from "../redux/userSlice.js";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 
 const SignUp = () => {
@@ -68,7 +69,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/signup",
+        `${serverURL}/api/auth/signup`,
         dataToSend,
         { withCredentials: true }
       );
@@ -125,7 +126,7 @@ const SignUp = () => {
         role: formData.role,
       };
       const {data} = await axios.post(
-        "http://localhost:8000/api/auth/signupwithgoogle",
+        `${serverURL}/api/auth/signupwithgoogle`,
         payload,
         { withCredentials: true }
       );

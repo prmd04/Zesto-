@@ -6,6 +6,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { setMyShopData } from "../redux/ownerSlice";
 import Loader from "../components/Loader";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const AddFoodItem = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const AddFoodItem = () => {
     if (formData.image) data.append("image", formData.image);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/item/addItem", data, {
+      const res = await axios.post(`${serverURL}/api/item/addItem`, data, {
         withCredentials: true,
       });
       toast.success("Food item added successfully!");

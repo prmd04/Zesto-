@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Loader2 } from "lucide-react";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -18,7 +19,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/sendotp",
+        `${serverURL}/api/auth/sendotp`,
         { email },
         { withCredentials: true }
       );
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/verifyotp",
+        `${serverURL}/api/auth/verifyotp`,
         { email, otp },
         { withCredentials: true }
       );
@@ -62,7 +63,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/resetpassword",
+        `${serverURL}/api/auth/resetpassword`,
         { email, newPassword: newPassword },
         { withCredentials: true }
       );

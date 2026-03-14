@@ -2,6 +2,7 @@ import React,{useEffect} from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { setMyOrders } from '../redux/userSlice';
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 
 
@@ -12,7 +13,7 @@ const useGetMyOrders = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/order/getmyorders",
+          `${serverURL}/api/order/getmyorders`,
           { withCredentials: true }
         );
 

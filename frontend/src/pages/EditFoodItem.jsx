@@ -6,6 +6,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { setMyShopData } from "../redux/ownerSlice";
 import Loader from "../components/Loader";
+const serverURL = import.meta.env.VITE_SERVER_URL;
 
 const EditFoodItem = () => {
   const { itemId } = useParams();
@@ -36,7 +37,7 @@ const EditFoodItem = () => {
       
       try {
         const result = await axios.get(
-          `http://localhost:8000/api/item/getitembyid/${itemId}`,
+          `${serverURL}/api/item/getitembyid/${itemId}`,
           { withCredentials: true }
         );
         setCurrentItem(result.data);
@@ -88,7 +89,7 @@ const EditFoodItem = () => {
     try {
       
       const res = await axios.post(
-        `http://localhost:8000/api/item/edititem/${itemId}`,
+        `${serverURL}/api/item/edititem/${itemId}`,
         data,
         { withCredentials: true }
       );
