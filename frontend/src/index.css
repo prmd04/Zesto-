@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* In your index.css */
+
+@theme {
+  /* This replaces the old tailwind.config.js extend section */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  /* You can also add your brand colors here */
+  --color-zesto-orange: #ea580c; 
+}
