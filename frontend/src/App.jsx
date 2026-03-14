@@ -25,9 +25,6 @@ import TrackOrder from "./pages/TrackOrder.jsx";
 import Shop from "./pages/Shop.jsx";
 
 function App() {
-  
-  const socketRef = useRef(null);
-  const dispatch = useDispatch();
   useGetCurrentUser();
   useGetShopByCity();
   useGetItemByCity();
