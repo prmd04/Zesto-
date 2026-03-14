@@ -26,20 +26,20 @@ const TrackOrder = () => {
   };
 
   useEffect(() => {
-  handleGetOrder();
-}, [orderId]);
+    handleGetOrder();
+  }, [orderId]);
 
   useEffect(() => {
-  if (!order) return;
+    if (!order) return;
 
-  if (order.status !== "out for delivery") return;
+    if (order.status !== "out for delivery") return;
 
-  const interval = setInterval(() => {
-    handleGetOrder();
-  }, 5000);
+    const interval = setInterval(() => {
+      handleGetOrder();
+    }, 5000);
 
-  return () => clearInterval(interval);
-}, [order?.status]);
+    return () => clearInterval(interval);
+  }, [order?.status]);
 
   if (loading) {
     return <div className="p-6">Loading order...</div>;
@@ -62,26 +62,24 @@ const TrackOrder = () => {
 
   let mapData = null;
 
-  
   if (
-  orderData?.status === "out for delivery" &&
-  deliveryBoyCoords &&
-  deliveryBoyCoords.length === 2 &&
-  customerLat &&
-  customerLng
-) {
-  mapData = {
-    deliveryBoyLocation: {
-      lat: deliveryBoyCoords[1],
-      lon: deliveryBoyCoords[0],
-    },
-    customerLocation: {
-      lat: customerLat,
-      lon: customerLng,
-    },
-  };
-}
-
+    orderData?.status === "out for delivery" &&
+    deliveryBoyCoords &&
+    deliveryBoyCoords.length === 2 &&
+    customerLat &&
+    customerLng
+  ) {
+    mapData = {
+      deliveryBoyLocation: {
+        lat: deliveryBoyCoords[1],
+        lon: deliveryBoyCoords[0],
+      },
+      customerLocation: {
+        lat: customerLat,
+        lon: customerLng,
+      },
+    };
+  }
 
   // console.log(mapData);
 
@@ -89,7 +87,10 @@ const TrackOrder = () => {
     <div className="min-h-screen w-3xl mx-auto bg-[#fff9f6] flex flex-col font-sans text-gray-800">
       {/* Top Navigation */}
       <div className="flex items-center gap-4 px-4 py-4 bg-white shadow-sm">
-        <button className="p-1 cursor-pointer" onClick={()=>navigate("/myorders")}>
+        <button
+          className="p-1 cursor-pointer"
+          onClick={() => navigate("/myorders")}
+        >
           <ArrowLeft size={20} />
         </button>
         <h1 className="text-lg font-bold">Track Order</h1>
