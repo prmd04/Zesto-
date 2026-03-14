@@ -493,34 +493,41 @@ const sendDeliveryOtp = async (req, res) => {
   try {
     const { orderId, shopOrderId } = req.body;
 
-    const order = await Order.findById(orderId).populate("user");
+    const order = await Order.findById(orderId).populate(
+      "user",
+      "fullName email"
+    );
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
     const shopOrder = order.shopOrders.id(shopOrderId);
 
     if (!shopOrder) {
-      return res.status(404).json({ message: "Shop not found" });
+      return res.status(404).json({ message: "Shop order not found" });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
     shopOrder.deliveryOtp = otp;
     shopOrder.otpExpires = Date.now() + 10 * 60 * 1000;
 
     await order.save();
-    await sendDeliveryOTP(order.user, otp);
 
-    return res
-      .status(200)
-      .json({ message: `OTP sent successfully To ${order.user.fullName}}` });
+    // send email without blocking API response
+    sendDeliveryOTP(order.user, otp).catch(console.error);
+
+    return res.status(200).json({
+      message: `OTP sent successfully to ${order.user.fullName}`,
+    });
+
   } catch (error) {
     return res.status(500).json({
       message: `Send delivery otp error: ${error.message}`,
     });
   }
 };
-
 const verifyDeliveryOtp = async (req, res) => {
   try {
     const { orderId, shopOrderId, otp } = req.body;
