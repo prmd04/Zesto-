@@ -1,45 +1,45 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, 
-  auth: {
-    user: process.env.GMAIL,
-    pass: process.env.APP_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false 
-  }
-});
+// Initialize Resend with the API Key you added to Render
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sendOTP = async(email, otp) => {
+const sendOTP = async (email, otp) => {
   try {
-    await transporter.sendMail({
-      from: process.env.GMAIL,
+    const { data, error } = await resend.emails.send({
+      // IMPORTANT: While testing on the free tier, use 'onboarding@resend.dev'
+      from: 'Zesto <onboarding@resend.dev>', 
       to: email,
       subject: "Reset Your Password",
-      html: `<p>Your OTP for password reset is <b>${otp}</b>. It will expire in 10 minutes.</p>`
+      html: `<p>Your OTP for password reset is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
     });
-    console.log("OTP sent successfully to:", email);
-  } catch (err) {
-    console.log("Error in sendOTP:", err);
-  }
-}
 
-const sendDeliveryOTP = async(user, otp) => {
+    if (error) {
+      return console.error("Resend Error (sendOTP):", error);
+    }
+
+    console.log("OTP sent successfully! ID:", data.id);
+  } catch (err) {
+    console.error("System Error in sendOTP:", err);
+  }
+};
+
+const sendDeliveryOTP = async (user, otp) => {
   try {
-    await transporter.sendMail({
-      from: process.env.GMAIL,
+    const { data, error } = await resend.emails.send({
+      from: 'Zesto <onboarding@resend.dev>',
       to: user.email,
       subject: "Confirm the Delivery",
-      html: `<p>Your OTP for Confirmation Of Delivery is <b>${otp}</b>. It will expire in 10 minutes.</p>`
+      html: `<p>Your OTP for Confirmation Of Delivery is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
     });
-    console.log("Delivery OTP sent successfully to:", user.email);
+
+    if (error) {
+      return console.error("Resend Error (sendDeliveryOTP):", error);
+    }
+
+    console.log("Delivery OTP sent successfully! ID:", data.id);
   } catch (err) {
-    console.log("Error in sendDeliveryOTP:", err);
+    console.error("System Error in sendDeliveryOTP:", err);
   }
-}
+};
 
 module.exports = { sendOTP, sendDeliveryOTP };
