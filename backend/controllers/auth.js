@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
-const sendOTP = require("../utils/mail");
 const crypto = require("crypto");
 
 const signup = async (req, res) => {
@@ -111,8 +110,8 @@ const sendotp = async (req, res) => {
 
     await user.save();
 
-    await sendOTP(email, otp);
-    return res.status(200).json({ message: "OTP sent successfully!" });
+    console.log("OTP",otp)
+    return res.status(200).json({ message: "OTP sent successfully!" ,OTP:otp});
   } catch (error) {
     res.status(500).json({ message: `Server Error: ${error.message}` });
   }

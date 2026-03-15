@@ -4,7 +4,6 @@ const Shop = require("../models/shopModel");
 const Order = require("../models/orderModel");
 const User = require("../models/userModel");
 const deliveryAssignment = require("../models/deliveryAssignmentModel");
-const { sendDeliveryOTP } = require("../utils/mail");
 const Razorpay = require("razorpay");
 
 var instance = new Razorpay({
@@ -508,18 +507,19 @@ const sendDeliveryOtp = async (req, res) => {
       return res.status(404).json({ message: "Shop order not found" });
     }
 
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
     shopOrder.deliveryOtp = otp;
     shopOrder.otpExpires = Date.now() + 10 * 60 * 1000;
 
     await order.save();
 
-    // send email without blocking API response
-    sendDeliveryOTP(order.user, otp).catch(console.error);
+    // console.log("Delivery OTP:", otp);
 
     return res.status(200).json({
-      message: `OTP sent successfully to ${order.user.fullName}`,
+      success: true,
+      message: "OTP generated successfully",
+      otp: otp
     });
 
   } catch (error) {

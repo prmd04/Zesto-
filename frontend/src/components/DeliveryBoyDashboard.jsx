@@ -106,6 +106,7 @@ const DeliveryBoyDashboard = () => {
   };
 
   const verifyOtp = async () => {
+    console.log("Verifying OTP")
     if (!currentOrder?._id || !currentOrder?.shopOrder?._id) {
       toast.error("Order information missing");
       return;
@@ -364,7 +365,7 @@ const DeliveryBoyDashboard = () => {
                   <button
                     disabled={verifyingOtp || otp.length !== 6}
                     onClick={verifyOtp}
-                    className={`flex-1 py-3 rounded-xl font-bold text-white ${
+                    className={`flex-1 py-3 rounded-xl font-bold text-white cursor-pointer ${
                       verifyingOtp
                         ? "bg-gray-400"
                         : "bg-green-600 hover:bg-green-700"
