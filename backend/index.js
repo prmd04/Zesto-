@@ -18,7 +18,7 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "https://zesto.onrender.com",
+    origin: ["https://zesto.onrender.com", "http://localhost:5173"],
     credentials: true,
   })
 );
