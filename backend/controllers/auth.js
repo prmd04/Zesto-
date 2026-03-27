@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
 const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/sendEmail")
 
 const signup = async (req, res) => {
   try {
@@ -115,15 +115,9 @@ const sendotp = async (req, res) => {
 
     await user.save();
 
-    await sendEmail(
-      email,
-      "Verify Your Order Delivery",
-      `Your one-time password (OTP) to confirm delivery of your order is ${otp}. Please provide this OTP to the delivery partner only after receiving the order. This code will expire in 10 minutes. If you did not request this, please ignore this email.`,
-    );
+    await sendEmail(email, "OTP Code", `Your OTP for password reset is ${otp}. This code will expire in 10 minutes. If you did not request a password reset, please ignore this email.`);
 
-    return res
-      .status(200)
-      .json({ message: "OTP sent successfully!"});
+    return res.status(200).json({ message: "OTP sent successfully!" });
   } catch (error) {
     res.status(500).json({ message: `Server Error: ${error.message}` });
   }
@@ -200,7 +194,7 @@ const signupwithgoogle = async (req, res) => {
     return res
       .status(500)
       .json({ message: `unable to sign up ${err.message}` });
-    console.log(err.message);
+      console.log(err.message);
   }
 };
 const signinwithgoogle = async (req, res) => {
@@ -236,5 +230,5 @@ module.exports = {
   verifyotp,
   resetpassword,
   signupwithgoogle,
-  signinwithgoogle,
+  signinwithgoogle
 };

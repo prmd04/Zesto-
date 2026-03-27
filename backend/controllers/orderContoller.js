@@ -515,10 +515,11 @@ const sendDeliveryOtp = async (req, res) => {
     await order.save();
 
     await sendEmail(
-      email,
+       email,
       "Verify Your Order Delivery",
-      `Your one-time password (OTP) to confirm delivery of your order is ${otp}...`,
+      `Your one-time password (OTP) to confirm delivery of your order is ${otp}. Please provide this OTP to the delivery partner only after receiving the order. This code will expire in 10 minutes. If you did not request this, please ignore this email.`,
     );
+  
 
     return res.status(200).json({
       success: true,
