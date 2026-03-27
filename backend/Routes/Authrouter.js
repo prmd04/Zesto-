@@ -8,7 +8,7 @@ const {
   verifyotp,
   resetpassword,
   signupwithgoogle,
-  singinwithgoogle,
+  signinwithgoogle,
 } = require("../controllers/auth");
 
 const authRouter = express.Router();
@@ -20,7 +20,7 @@ authRouter.post("/sendotp", sendotp);
 authRouter.post("/verifyotp", verifyotp);
 authRouter.post("/resetpassword", resetpassword);
 authRouter.post("/signupwithgoogle", signupwithgoogle);
-authRouter.post("/singinwithgoogle", singinwithgoogle);
+authRouter.post("/signinwithgoogle", signinwithgoogle);
 
 
 module.exports = authRouter;

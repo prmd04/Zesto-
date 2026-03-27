@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
 const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
 
 const signup = async (req, res) => {
   try {
@@ -9,18 +10,18 @@ const signup = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
-      return res.status(404).json({ message: "user is alredy exits" });
+      return res.status(409).json({ message: "User already exists" });
     }
 
     if (password.length < 6) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: "password must be more than six character" });
     }
 
     if (mobileNumber.length < 10) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: "mobile number must be 10 digit" });
     }
 
@@ -42,7 +43,11 @@ const signup = async (req, res) => {
       httpOnly: true,
     });
 
-    return res.status(201).json(user);
+    // Sanitize user object (remove password)
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(201).json(userResponse);
   } catch (err) {
     return res
       .status(500)
@@ -110,8 +115,15 @@ const sendotp = async (req, res) => {
 
     await user.save();
 
-    console.log("OTP",otp)
-    return res.status(200).json({ message: "OTP sent successfully!" ,OTP:otp});
+    await sendEmail(
+      email,
+      "Verify Your Order Delivery",
+      `Your one-time password (OTP) to confirm delivery of your order is ${otp}. Please provide this OTP to the delivery partner only after receiving the order. This code will expire in 10 minutes. If you did not request this, please ignore this email.`,
+    );
+
+    return res
+      .status(200)
+      .json({ message: "OTP sent successfully!"});
   } catch (error) {
     res.status(500).json({ message: `Server Error: ${error.message}` });
   }
@@ -166,7 +178,7 @@ const signupwithgoogle = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
-      return res.status(404).json({ message: "user is alredy exits" });
+      return res.status(409).json({ message: "User already exists" });
     }
 
     user = await User.create({
@@ -188,10 +200,10 @@ const signupwithgoogle = async (req, res) => {
     return res
       .status(500)
       .json({ message: `unable to sign up ${err.message}` });
-      console.log(err.message);
+    console.log(err.message);
   }
 };
-const singinwithgoogle = async (req, res) => {
+const signinwithgoogle = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -224,5 +236,5 @@ module.exports = {
   verifyotp,
   resetpassword,
   signupwithgoogle,
-  singinwithgoogle
+  signinwithgoogle,
 };

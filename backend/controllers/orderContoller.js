@@ -4,7 +4,9 @@ const Shop = require("../models/shopModel");
 const Order = require("../models/orderModel");
 const User = require("../models/userModel");
 const deliveryAssignment = require("../models/deliveryAssignmentModel");
+const crypto = require("crypto");
 const Razorpay = require("razorpay");
+const sendEmail = require("../utils/sendEmail");
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,
@@ -124,7 +126,7 @@ const placeOrder = async (req, res) => {
   }
 };
 
-const verifyPayement = async (req, res) => {
+const verifyPayment = async (req, res) => {
   try {
     const { razorpay_payment_id, orderId } = req.body;
 
@@ -185,11 +187,9 @@ const getMyOrders = async (req, res) => {
 };
 
 const updateOrderStatus = async (req, res) => {
-  
   try {
     const { orderId, shopId } = req.params;
     const { status } = req.body;
-   
 
     // Fetch parent order
     const order = await Order.findById(orderId);
@@ -213,7 +213,6 @@ const updateOrderStatus = async (req, res) => {
     // Create delivery assignment ONLY when needed
     if (status === "out for delivery" && !shopOrder.assignment) {
       const { longitude, latitude } = order.deliveryAddress;
-
 
       // Find nearby delivery boys
       const nearbyDeliveryBoys = await User.find({
@@ -244,7 +243,6 @@ const updateOrderStatus = async (req, res) => {
           status: { $in: ["assigned"] },
         })
         .distinct("assignedTo");
-        
 
       const busyIdSet = new Set(busyIds.map((id) => id.toString()));
 
@@ -267,7 +265,7 @@ const updateOrderStatus = async (req, res) => {
         broadcastedTo: availableBoys.map((boy) => boy._id),
         status: "broadcasted",
       });
-      
+
       //  Attach assignment to shopOrder
       shopOrder.assignment = assignmentDoc._id;
       shopOrder.assignedTo = null;
@@ -494,12 +492,14 @@ const sendDeliveryOtp = async (req, res) => {
 
     const order = await Order.findById(orderId).populate(
       "user",
-      "fullName email"
+      "fullName email",
     );
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    const email = order.user.email;
 
     const shopOrder = order.shopOrders.id(shopOrderId);
 
@@ -507,21 +507,24 @@ const sendDeliveryOtp = async (req, res) => {
       return res.status(404).json({ message: "Shop order not found" });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otp = crypto.randomInt(100000, 999999);
 
     shopOrder.deliveryOtp = otp;
     shopOrder.otpExpires = Date.now() + 10 * 60 * 1000;
 
     await order.save();
 
-    // console.log("Delivery OTP:", otp);
+    await sendEmail(
+      email,
+      "Verify Your Order Delivery",
+      `Your one-time password (OTP) to confirm delivery of your order is ${otp}...`,
+    );
 
     return res.status(200).json({
       success: true,
       message: "OTP generated successfully",
-      otp: otp
+      otp: otp,
     });
-
   } catch (error) {
     return res.status(500).json({
       message: `Send delivery otp error: ${error.message}`,
@@ -585,5 +588,5 @@ module.exports = {
   getOrderById,
   sendDeliveryOtp,
   verifyDeliveryOtp,
-  verifyPayement,
+  verifyPayment,
 };
